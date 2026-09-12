@@ -5,7 +5,7 @@ import { OpenSheetMusicDisplay } from 'opensheetmusicdisplay';
 type Clef = 'treble' | 'alto' | 'tenor' | 'bass';
 type Phase = 'idle' | 'uploading' | 'success' | 'error';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL ?? '';
 const clefs: { value: Clef; label: string; symbol: string; range: string }[] = [
   { value: 'treble', label: 'Treble', symbol: 'G', range: 'G4 on the second line' },
   { value: 'alto', label: 'Alto', symbol: 'C', range: 'C4 on the middle line' },

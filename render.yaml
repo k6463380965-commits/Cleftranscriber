@@ -1,26 +1,6 @@
 services:
   - type: web
-    name: clef-converter-api
-    runtime: python
-    rootDir: .
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.13.0
-      - key: CORS_ORIGINS
-        sync: false
-
-  - type: web
-    name: clef-converter-frontend
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_URL
-        sync: false
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    name: clef-converter
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health

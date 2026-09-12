@@ -56,4 +56,6 @@ npm run build
 
 ## Render deployment
 
-`render.yaml` defines a static frontend and a Python API service. Deploy the repository as a Blueprint. Render builds the frontend with Vite and runs FastAPI with Uvicorn. Set `VITE_API_URL` on the frontend service to the public URL of the API service.
+`render.yaml` defines one Docker web service named `clef-converter`. The container builds the React frontend, serves it from FastAPI, and exposes `/api/convert` from the same domain. No `VITE_API_URL`, CORS, or second service configuration is needed.
+
+In Render, create a Blueprint from this repository, choose the Free instance type, and deploy. The resulting URL serves both the website and API.

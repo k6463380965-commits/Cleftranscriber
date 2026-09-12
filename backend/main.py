@@ -3,7 +3,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import FileResponse, Response
 
 from .models import ClefName, ConversionResponse
 from .musicxml import convert_clef
@@ -22,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
 
 @app.get("/health")
@@ -73,3 +75,15 @@ async def convert_musicxml_direct(
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     return Response(content=converted, media_type="application/vnd.recordare.musicxml+xml")
+
+
+@app.get("/{requested_path:path}", include_in_schema=False)
+async def serve_frontend(requested_path: str = "") -> FileResponse:
+    """Serve the built React app so Render only needs one web service."""
+    requested_file = (FRONTEND_DIST / requested_path).resolve()
+    if requested_file.is_file() and FRONTEND_DIST in requested_file.parents:
+        return FileResponse(requested_file)
+    index_file = FRONTEND_DIST / "index.html"
+    if index_file.is_file():
+        return FileResponse(index_file)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
